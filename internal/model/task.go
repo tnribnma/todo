@@ -5,10 +5,10 @@ import "time"
 type Task struct {
 	ID          int       `json:"id"`
 	Title       string    `json:"title"`
-	Description string    `json:"description"`
+	Description string    `json:"description,omitempty"`
 	Done        bool      `json:"done"`
-	CreatedAt   time.Time `json:"createdat"`
-	UpdatedAt   time.Time `json:"updatedat"`
+	CreatedAt   time.Time `json:"created_at"`
+	UpdatedAt   time.Time `json:"updated_at"`
 }
 
 type CreateTaskRequest struct {
@@ -16,8 +16,8 @@ type CreateTaskRequest struct {
 	Description string `json:"description"`
 }
 
-type UpdateTaskRequst struct {
-	Title       *string `json:"title"`
-	Description *string `json:"description"`
-	Done        *string `json:"done"`
+type UpdateTaskRequest struct {
+	Title       *string `json:"title,omitempty"`
+	Description *string `json:"description,omitempty"`
+	Done        *bool   `json:"done,omitempty"`
 }

@@ -4,27 +4,34 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+
 	"todo-api/internal/handler"
 	"todo-api/internal/middleware"
 	"todo-api/internal/store"
 )
 
 func main() {
+	// Initialize in-memory store
 	taskStore := store.NewTaskStore()
 	taskHandler := handler.NewTaskHandler(taskStore)
 
+	// Create router
 	mux := http.NewServeMux()
-	mux.HandleFunc("POST /tasks", h.Create)
-	mux.HandleFunc("GET /tasks", h.GetAll)
-	mux.HandleFunc("GET /tasks", h.GetByID)
-	mux.HandleFunc("PUT /tasks", h.Update)
-	mux.HandleFunc("DELETE /tasks", h.Delete)
 
+	// Routes
+	mux.HandleFunc("POST /tasks", taskHandler.Create)
+	mux.HandleFunc("GET /tasks", taskHandler.GetAll)
+	mux.HandleFunc("GET /tasks/", taskHandler.GetByID)
+	mux.HandleFunc("PUT /tasks/", taskHandler.Update)
+	mux.HandleFunc("DELETE /tasks/", taskHandler.Delete)
+
+	// Apply Middlewares
 	server := middleware.CORS(
 		middleware.Recovery(
 			middleware.Logging(mux),
 		),
 	)
-	fmt.Println("Server running on http://localhost:8080")
+
+	fmt.Println("🚀 Todo API running on http://localhost:8080")
 	log.Fatal(http.ListenAndServe(":8080", server))
 }
