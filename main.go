@@ -11,27 +11,22 @@ import (
 )
 
 func main() {
-	// Initialize in-memory store
 	taskStore := store.NewTaskStore()
 	taskHandler := handler.NewTaskHandler(taskStore)
 
-	// Create router
 	mux := http.NewServeMux()
-
-	// Routes
 	mux.HandleFunc("POST /tasks", taskHandler.Create)
 	mux.HandleFunc("GET /tasks", taskHandler.GetAll)
 	mux.HandleFunc("GET /tasks/", taskHandler.GetByID)
 	mux.HandleFunc("PUT /tasks/", taskHandler.Update)
 	mux.HandleFunc("DELETE /tasks/", taskHandler.Delete)
 
-	// Apply Middlewares
 	server := middleware.CORS(
 		middleware.Recovery(
 			middleware.Logging(mux),
 		),
 	)
 
-	fmt.Println("🚀 Todo API running on http://localhost:8080")
+	fmt.Println("Todo API running on http://localhost:8080")
 	log.Fatal(http.ListenAndServe(":8080", server))
 }
